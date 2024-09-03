@@ -15,28 +15,28 @@
     <div class="container p-5 my-5 shadow">
       <h1 class="fw-bold">Add New Student Record</h1>
 
-      <form class="mt-4" id="newStudentForm">
-        <label for="firstname">Lastname:</label>
-        <input id="firstname" type="text" class="form-control" required />
+      <label for="firstname">Lastname:</label>
+      <input id="firstname" type="text" class="form-control" required />
 
-        <label for="lastname">Firstname:</label>
-        <input id="lastname" type="text" class="form-control" required />
+      <label for="lastname">Firstname:</label>
+      <input id="lastname" type="text" class="form-control" required />
 
-        <label for="batch">Batch:</label>
-        <input id="batch" type="number" class="form-control" min="1" required />
+      <label for="batch">Batch:</label>
+      <input id="batch" type="number" class="form-control" min="1" required />
 
-        <label for="grade">Grade:</label>
-        <input
-          id="grade"
-          type="number"
-          class="form-control"
-          min="1"
-          max="100"
-          required
-        />
+      <label for="grade">Grade:</label>
+      <input
+        id="grade"
+        type="number"
+        class="form-control"
+        min="1"
+        max="100"
+        required
+      />
 
-        <button class="btn btn-dark mt-3">+ Add Record</button>
-      </form>
+      <button id="newStudentForm" class="btn btn-dark mt-3">
+        + Add Record
+      </button>
     </div>
     <div class="container p-5 shadow">
       <h1 class="fw-bold">Students</h1>
@@ -58,6 +58,7 @@
         getFirestore,
         collection,
         onSnapshot,
+        addDoc,
       } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
       // TODO: Add SDKs for Firebase products that you want to use
       // https://firebase.google.com/docs/web/setup#available-libraries
@@ -94,30 +95,22 @@
 
       document
         .querySelector("#newStudentForm")
-        .addEventListener("submit", () => {
-          let lastname = document.querySelector("#lastname").value;
-          let firstname = document.querySelector("#firstname").value;
-          let batch = document.querySelector("#batch").value;
-          let grade = document.querySelector("#grade").value;
+        .addEventListener("click", () => {
+          addDoc(collection(db, "students"), {
+            //   //insert into firestore (adding data and manage data) documentation is your bestfriend here!
+            lastname: document.querySelector("#lastname").value, //property: value ; what ever you type in the collection input
+            firstname: document.querySelector("#firstname").value,
+            batch: document.querySelector("#batch").value,
+            grade: document.querySelector("#grade").value,
+          });
+          //clear the values
+          document.querySelector("#firstname").value = "";
+          document.querySelector("#lastname").value = "";
+          document.querySelector("#batch").value = "";
+          document.querySelector("#grade").value = "";
         });
 
-      //insert into firestore (adding data and manage data) documentation is your bestfriend here!
-
-      // document
-      //   .querySelector("#newStudentForm")
-      //   .addEventListener("submit", () => {
-      //     addDoc(collection(db, "student"), {
-      //       lastname: document.querySelector("#lastname").value,
-      //       firstname: document.querySelector("#firstname").value,
-      //       batch: document.querySelector("#batch").value,
-      //       grade: document.querySelector("#grade").value,
-      //     });
-
-      //     document.querySelector("#lastname").value = "";
-      //     document.querySelector("#firstname").value = "";
-      //     document.querySelector("#batch").value = "";
-      //     document.querySelector("#grade").value = "";
-      //   }); -->
+      //THIS IS FOR CRETAE AND READ OPERATIONS -END
     </script>
   </body>
 </html>
