@@ -15,11 +15,11 @@
     <div class="container p-5 my-5 shadow">
       <h1 class="fw-bold">Add New Student Record</h1>
 
-      <label for="firstname">Lastname:</label>
-      <input id="firstname" type="text" class="form-control" required />
-
-      <label for="lastname">Firstname:</label>
+      <label for="lastname">Lastname:</label>
       <input id="lastname" type="text" class="form-control" required />
+
+      <label for="firstname">Firstname:</label>
+      <input id="firstname" type="text" class="form-control" required />
 
       <label for="batch">Batch:</label>
       <input id="batch" type="number" class="form-control" min="1" required />
@@ -59,6 +59,8 @@
         collection,
         onSnapshot,
         addDoc,
+        orderBy,
+        query,
       } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
       // TODO: Add SDKs for Firebase products that you want to use
       // https://firebase.google.com/docs/web/setup#available-libraries
@@ -79,19 +81,22 @@
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
 
-      onSnapshot(collection(db, "students"), (snapshot) => {
-        document.querySelector("#tableArea").innerHTML = "";
-        snapshot.forEach((student) => {
-          let studentRow = `<tr>
+      onSnapshot(
+        query(collection(db, "students"), orderBy("grade", "desc")), //import query and orderBy by ascendign letters in lastname
+        (snapshot) => {
+          document.querySelector("#tableArea").innerHTML = "";
+          snapshot.forEach((student) => {
+            let studentRow = `<tr>
                         <td>${student.data().lastname}</td>
                         <td>${student.data().firstname}</td>
                         <td>${student.data().batch}</td>
                         <td>${student.data().grade}</td>
                         </tr>`;
 
-          document.querySelector("#tableArea").innerHTML += studentRow;
-        });
-      });
+            document.querySelector("#tableArea").innerHTML += studentRow;
+          });
+        }
+      );
 
       document
         .querySelector("#newStudentForm")
@@ -104,8 +109,8 @@
             grade: document.querySelector("#grade").value,
           });
           //clear the values
-          document.querySelector("#firstname").value = "";
           document.querySelector("#lastname").value = "";
+          document.querySelector("#firstname").value = "";
           document.querySelector("#batch").value = "";
           document.querySelector("#grade").value = "";
         });
